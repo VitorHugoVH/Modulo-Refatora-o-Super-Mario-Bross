@@ -6,6 +6,13 @@ Classic Super Mario Bros. game implemented with Java for CS319-Object-Oriented S
 
 You can visit [wikipedia page](https://en.wikipedia.org/wiki/Super_Mario_Bros.) or [Super Mario wiki page](https://www.mariowiki.com/Super_Mario_Bros.) for detailed information about the game.
 
+## Módulo Caso Prático (Refatoração)
+
+Material didático para análise de code smells e refatoração neste código:
+
+- **Documento completo:** [`docs/CASO-PRATICO-REFATORACAO.md`](docs/CASO-PRATICO-REFATORACAO.md)
+- **Quiz + comparativo interativo:** abra [`docs/interativo/index.html`](docs/interativo/index.html) no navegador
+
 ## Built With
 * [Java](https://www.java.com/)
 

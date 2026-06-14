@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comparativo — Code Smells | Caso Prático</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <div class="logo">
+        <div class="logo-icon">SMB</div>
+        <div>
+          <h1>Comparativo de Código</h1>
+          <p>Com smell vs. refatorado</p>
+        </div>
+      </div>
+      <nav>
+        <a href="index.html">Início</a>
+        <a href="comparativo.html" class="active">Comparativo</a>
+        <a href="quiz.html">Quiz</a>
+        <a href="../CASO-PRATICO-REFATORACAO.md">Documento</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h2 class="page-title">Código com smell vs. código limpo</h2>
+    <p class="page-subtitle">
+      Selecione um code smell abaixo. Use as abas para ver só o código problemático,
+      só o refatorado, ou ambos lado a lado.
+    </p>
+
+    <div class="smell-nav" id="smell-nav"></div>
+
+    <div id="comparison-panel" class="comparison-panel"></div>
+
+    <div class="comparison-nav-buttons">
+      <button class="btn btn-secondary" id="prev-btn">← Anterior</button>
+      <span id="comparison-counter" style="color:var(--muted);align-self:center;font-size:0.9rem"></span>
+      <button class="btn btn-secondary" id="next-btn">Próximo →</button>
+    </div>
+  </main>
+
+  <footer>
+    Dica: os trechos "com smell" refletem o código real em <code>src/</code>.
+    Os trechos refatorados são propostas didáticas do módulo.
+  </footer>
+
+  <script src="js/comparativo-data.js"></script>
+  <script src="js/comparativo.js"></script>
+</body>
+</html>

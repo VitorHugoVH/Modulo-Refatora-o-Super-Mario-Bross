@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz — Code Smells | Caso Prático</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <div class="logo">
+        <div class="logo-icon">SMB</div>
+        <div>
+          <h1>Quiz — Verificação de Conhecimento</h1>
+          <p>Seção 4.1 do módulo Caso Prático</p>
+        </div>
+      </div>
+      <nav>
+        <a href="index.html">Início</a>
+        <a href="comparativo.html">Comparativo</a>
+        <a href="quiz.html" class="active">Quiz</a>
+        <a href="../CASO-PRATICO-REFATORACAO.md">Documento</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h2 class="page-title">Quiz interativo</h2>
+    <p class="page-subtitle">
+      10 questões sobre code smells e refatoração no Super Mario Bros.
+      Resposta com feedback imediato. Ao final, veja sua pontuação e revisão.
+    </p>
+
+    <div class="quiz-progress">
+      <div class="quiz-progress-bar" id="quiz-progress-bar" style="width:0%"></div>
+    </div>
+
+    <div id="quiz-container"></div>
+  </main>
+
+  <footer>
+    Antes do quiz, revise o <a href="comparativo.html">comparativo de código</a> para melhor desempenho.
+  </footer>
+
+  <script src="js/quiz-data.js"></script>
+  <script src="js/quiz.js"></script>
+</body>
+</html>
