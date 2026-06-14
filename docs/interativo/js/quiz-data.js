@@ -88,7 +88,7 @@ ImageLoader imageLoader = new ImageLoader();`,
       { text: "if (currentPixel == 255)", correct: false },
       { text: "Duplicar o valor RGB em 3 arquivos", correct: false }
     ],
-    explanation: "Enum documenta e centraliza o mapeamento pixel → entidade, eliminando Primitive Obsession."
+    explanation: "Enum documenta e centraliza o mapeamento pixel -> entidade, eliminando Primitive Obsession."
   },
   {
     id: 7,
@@ -133,7 +133,7 @@ ImageLoader imageLoader = new ImageLoader();`,
   },
   {
     id: 10,
-    question: "Associar smell → técnica: Magic Numbers devem ser tratados com:",
+    question: "Qual técnica de refatoração trata o smell Magic Numbers?",
     type: "text-choice",
     options: [
       { text: "Extract Constant / Introduce Enum", correct: true },

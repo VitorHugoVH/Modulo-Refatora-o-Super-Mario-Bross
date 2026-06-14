@@ -11,6 +11,7 @@ You can visit [wikipedia page](https://en.wikipedia.org/wiki/Super_Mario_Bros.) 
 Material didático para análise de code smells e refatoração neste código:
 
 - **Documento completo:** [`docs/CASO-PRATICO-REFATORACAO.md`](docs/CASO-PRATICO-REFATORACAO.md)
+- **Guia PDF para estudantes:** abra [`docs/interativo/guia.html`](docs/interativo/guia.html) e clique em **Baixar PDF**
 - **Quiz + comparativo interativo:** abra [`docs/interativo/index.html`](docs/interativo/index.html) no navegador
 
 ## Built With

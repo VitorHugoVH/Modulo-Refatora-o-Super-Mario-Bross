@@ -114,7 +114,7 @@ function showFeedback(q, selectedIndex) {
   }
 }
 
-function showResults() {
+function calculateScore() {
   const total = QUIZ_QUESTIONS.length;
   let score = 0;
 
@@ -129,37 +129,257 @@ function showResults() {
   else if (pct >= 70) message = "Bom trabalho! Revise os smells que errou.";
   else if (pct >= 50) message = "Razoável. Releia a seção de code smells.";
 
+  return { score, total, pct, message };
+}
+
+function buildReviewHtml() {
+  return QUIZ_QUESTIONS.map((q, i) => {
+    const correctIndex = q.options.findIndex(o => o.correct);
+    const ok = answers[i] === correctIndex;
+    const letter = ["A", "B", "C", "D"][answers[i]] ?? "—";
+    const correctLetter = ["A", "B", "C", "D"][correctIndex];
+    return `
+      <div class="quiz-review-item ${ok ? "correct-item" : "wrong-item"}">
+        <strong>Q${i + 1}:</strong> ${escapeHtml(q.question)}<br>
+        Sua resposta: ${letter} ${ok ? "✓" : `(correta: ${correctLetter})`}
+      </div>
+    `;
+  }).join("");
+}
+
+function buildReviewText() {
+  const letters = ["A", "B", "C", "D"];
+
+  return QUIZ_QUESTIONS.map((q, i) => {
+    const correctIndex = q.options.findIndex(o => o.correct);
+    const ok = answers[i] === correctIndex;
+    const letter = letters[answers[i]] ?? "—";
+    const correctLetter = letters[correctIndex];
+    return {
+      number: i + 1,
+      question: q.question,
+      status: ok ? "Correta" : "Incorreta",
+      studentAnswer: letter,
+      correctAnswer: correctLetter,
+      isCorrect: ok,
+      explanation: q.explanation
+    };
+  });
+}
+
+function sanitizePdfText(text) {
+  return String(text)
+    .replace(/\u2192/g, "->")
+    .replace(/[\u2013\u2014]/g, "-")
+    .replace(/\u00B7/g, "-")
+    .replace(/\u2026/g, "...")
+    .replace(/[\u201C\u201D]/g, '"')
+    .replace(/[\u2018\u2019]/g, "'");
+}
+
+function generateResultPdf(studentName, enrollment, course, result) {
+  if (!window.jspdf || !window.jspdf.jsPDF) {
+    throw new Error("Biblioteca PDF não carregada. Verifique sua conexão e recarregue a página.");
+  }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  const margin = 14;
+  const maxWidth = 182;
+  const lineHeight = 5.5;
+  let y = 18;
+
+  function ensureSpace(extra = 12) {
+    if (y + extra > 285) {
+      doc.addPage();
+      y = 18;
+    }
+  }
+
+  function addHeading(text, size = 13) {
+    ensureSpace(14);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(size);
+    doc.text(sanitizePdfText(text), margin, y);
+    y += size === 13 ? 9 : 7;
+  }
+
+  function addLabelValue(label, value) {
+    ensureSpace(8);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.text(`${sanitizePdfText(label)}:`, margin, y);
+    doc.setFont("helvetica", "normal");
+    const lines = doc.splitTextToSize(sanitizePdfText(String(value)), maxWidth - 42);
+    doc.text(lines, margin + 42, y);
+    y += Math.max(lines.length, 1) * lineHeight + 2;
+  }
+
+  function addParagraph(text, options = {}) {
+    doc.setFont("helvetica", options.bold ? "bold" : "normal");
+    doc.setFontSize(options.size || 10);
+    const lines = doc.splitTextToSize(sanitizePdfText(text), maxWidth);
+    ensureSpace(lines.length * lineHeight + 4);
+    doc.text(lines, margin, y);
+    y += lines.length * lineHeight + (options.spacing ?? 4);
+  }
+
+  const dateStr = new Date().toLocaleString("pt-BR");
+
+  doc.setFillColor(229, 37, 33);
+  doc.rect(0, 0, 210, 28, "F");
+  doc.setTextColor(255, 255, 255);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(15);
+  doc.text(sanitizePdfText("Quiz — Caso Prático: Refatoração de Código"), margin, 12);
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "normal");
+  doc.text(sanitizePdfText("Super Mario Bros · Módulo Code Smells"), margin, 20);
+  doc.setTextColor(0, 0, 0);
+  y = 38;
+
+  addHeading("Dados do estudante");
+  addLabelValue("Nome", studentName);
+  addLabelValue("Matrícula", enrollment);
+  addLabelValue("Curso", course);
+  addLabelValue("Data do quiz", dateStr);
+
+  y += 2;
+  addHeading("Resultado");
+  addLabelValue("Pontuação", `${result.score}/${result.total}`);
+  addLabelValue("Percentual", `${result.pct}%`);
+  addLabelValue("Desempenho", result.message);
+
+  y += 2;
+  addHeading("Revisão das questões", 12);
+
+  buildReviewText().forEach((item) => {
+    ensureSpace(28);
+    doc.setDrawColor(200, 200, 200);
+    doc.line(margin, y - 2, margin + maxWidth, y - 2);
+    y += 4;
+
+    addParagraph(`Questão ${item.number}: ${item.question}`, { bold: true, spacing: 3 });
+    addParagraph(`Status: ${item.status}`, {
+      spacing: 2,
+      bold: false
+    });
+    addParagraph(`Sua resposta: ${item.studentAnswer}`, { spacing: 2 });
+    if (!item.isCorrect) {
+      addParagraph(`Resposta correta: ${item.correctAnswer}`, { spacing: 2 });
+    }
+    addParagraph(`Explicação: ${item.explanation}`, { spacing: 6 });
+  });
+
+  ensureSpace(16);
+  doc.setFont("helvetica", "italic");
+  doc.setFontSize(8);
+  doc.setTextColor(100, 100, 100);
+  doc.text(
+    "Documento gerado automaticamente pelo módulo interativo do curso.",
+    margin,
+    y
+  );
+
+  const fileName = `quiz-refatoracao_${sanitizeFileName(studentName)}_${sanitizeFileName(enrollment)}.pdf`;
+  doc.save(fileName);
+}
+
+function sanitizeFileName(name) {
+  return name
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-zA-Z0-9_-]/g, "_")
+    .replace(/_+/g, "_")
+    .substring(0, 40) || "estudante";
+}
+
+function downloadResult(result) {
+  const nameInput = document.getElementById("student-name");
+  const enrollmentInput = document.getElementById("student-enrollment");
+  const courseInput = document.getElementById("student-course");
+  const errorEl = document.getElementById("form-error");
+
+  const studentName = nameInput.value.trim();
+  const enrollment = enrollmentInput.value.trim();
+  const course = courseInput.value.trim();
+
+  [nameInput, enrollmentInput, courseInput].forEach(input => {
+    input.classList.remove("input-error");
+  });
+  errorEl.textContent = "";
+
+  if (!studentName || !enrollment || !course) {
+    if (!studentName) nameInput.classList.add("input-error");
+    if (!enrollment) enrollmentInput.classList.add("input-error");
+    if (!course) courseInput.classList.add("input-error");
+    errorEl.style.color = "#fca5a5";
+    errorEl.textContent = "Preencha nome, matrícula e curso para baixar o resultado.";
+    return;
+  }
+
+  try {
+    generateResultPdf(studentName, enrollment, course, result);
+    errorEl.style.color = "#86efac";
+    errorEl.textContent = "PDF gerado com sucesso!";
+  } catch (err) {
+    errorEl.style.color = "#fca5a5";
+    errorEl.textContent = err.message || "Não foi possível gerar o PDF. Tente novamente.";
+  }
+}
+
+function showResults() {
+  const result = calculateScore();
+
   document.getElementById("quiz-progress-bar").style.width = "100%";
 
   document.getElementById("quiz-container").innerHTML = `
     <div class="quiz-card quiz-result">
       <h3>Resultado final</h3>
-      <div class="quiz-result-score">${score}/${total}</div>
-      <div class="quiz-result-message">${message}</div>
-      <div class="quiz-result-detail">${pct}% de acertos</div>
+      <div class="quiz-result-score">${result.score}/${result.total}</div>
+      <div class="quiz-result-message">${result.message}</div>
+      <div class="quiz-result-detail">${result.pct}% de acertos</div>
 
-      <button class="btn btn-primary" id="retry-btn">Tentar novamente</button>
-      <a class="btn btn-secondary" href="comparativo.html" style="margin-left:0.5rem">Revisar comparativos</a>
+      <div class="quiz-download-section">
+        <h4>Baixar comprovante do resultado</h4>
+        <p>Preencha seus dados para gerar um arquivo PDF com a pontuação e a revisão das questões.</p>
+        <form id="download-form" novalidate>
+          <div class="quiz-form-grid">
+            <div class="form-field">
+              <label for="student-name">Nome do estudante</label>
+              <input type="text" id="student-name" name="student-name" placeholder="Ex.: Maria Silva" autocomplete="name" required>
+            </div>
+            <div class="form-field">
+              <label for="student-enrollment">Matrícula</label>
+              <input type="text" id="student-enrollment" name="student-enrollment" placeholder="Ex.: 2024001234" autocomplete="off" required>
+            </div>
+            <div class="form-field">
+              <label for="student-course">Curso</label>
+              <input type="text" id="student-course" name="student-course" placeholder="Ex.: Engenharia de Software" autocomplete="organization" required>
+            </div>
+          </div>
+          <div class="form-error" id="form-error" role="alert"></div>
+          <button type="submit" class="btn btn-success" id="download-btn">⬇ Baixar PDF</button>
+        </form>
+      </div>
+
+      <div class="quiz-actions" style="justify-content:center;margin-top:1.5rem">
+        <button class="btn btn-primary" id="retry-btn">Tentar novamente</button>
+        <a class="btn btn-secondary" href="comparativo.html">Revisar comparativos</a>
+      </div>
 
       <div class="quiz-review">
         <h4 style="margin-bottom:1rem">Revisão das questões</h4>
-        ${QUIZ_QUESTIONS.map((q, i) => {
-          const correctIndex = q.options.findIndex(o => o.correct);
-          const ok = answers[i] === correctIndex;
-          const letter = ["A","B","C","D"][answers[i]] ?? "—";
-          const correctLetter = ["A","B","C","D"][correctIndex];
-          return `
-            <div class="quiz-review-item ${ok ? "correct-item" : "wrong-item"}">
-              <strong>Q${i + 1}:</strong> ${q.question}<br>
-              Sua resposta: ${letter} ${ok ? "✓" : `(correta: ${correctLetter})`}
-            </div>
-          `;
-        }).join("")}
+        ${buildReviewHtml()}
       </div>
     </div>
   `;
 
   document.getElementById("retry-btn").addEventListener("click", initQuiz);
+  document.getElementById("download-form").addEventListener("submit", (event) => {
+    event.preventDefault();
+    downloadResult(result);
+  });
 }
 
 function escapeHtml(text) {

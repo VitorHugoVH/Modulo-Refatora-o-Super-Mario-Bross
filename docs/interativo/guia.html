@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guia do Caso Prático — PDF | Refatoração</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/guia.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <div class="logo">
+        <div class="logo-icon">SMB</div>
+        <div>
+          <h1>Guia do Caso Prático</h1>
+          <p>Material completo para estudantes</p>
+        </div>
+      </div>
+      <nav>
+        <a href="index.html">Início</a>
+        <a href="comparativo.html">Comparativo</a>
+        <a href="quiz.html">Quiz</a>
+        <a href="guia.html" class="active">Guia PDF</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="guia-toolbar">
+    <div class="container">
+      <span style="color:var(--muted);font-size:0.9rem">
+        Passo a passo completo: smells, refatoração e quiz
+      </span>
+      <div class="guia-toolbar-actions">
+        <button class="btn btn-success" id="download-pdf-btn" disabled>⬇ Baixar PDF</button>
+        <button class="btn btn-secondary" id="print-btn" disabled>🖨 Imprimir</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="container">
+    <div id="guia-status" class="guia-loading">Carregando guia...</div>
+    <article id="guia-document" class="guia-document hidden"></article>
+  </main>
+
+  <footer>
+    Conteúdo baseado em <code>docs/CASO-PRATICO-REFATORACAO.md</code>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="js/guia-content.js"></script>
+  <script src="js/guia.js"></script>
+</body>
+</html>

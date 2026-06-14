@@ -27,8 +27,11 @@ Abra no navegador a pasta **`docs/interativo/`**:
 | Início | [`index.html`](interativo/index.html) | Hub com links para quiz e comparativo |
 | Comparativo | [`comparativo.html`](interativo/comparativo.html) | Código com smell vs. refatorado (lado a lado) |
 | Quiz | [`quiz.html`](interativo/quiz.html) | 10 questões com feedback imediato |
+| Guia PDF | [`guia.html`](interativo/guia.html) | Guia completo exportável em PDF |
 
 > **Como abrir:** clique duas vezes em `docs/interativo/index.html` ou use *Live Server* / servidor local na pasta `docs/interativo/`.
+>
+> **Guia em PDF:** abra `docs/interativo/guia.html` e clique em **Baixar PDF** (requer internet na primeira carga das bibliotecas).
 
 ---
 
@@ -606,7 +609,7 @@ mario.acquirePoints(GameConstants.STOMP_POINTS);
 
 ### 4.1 Quiz interativo comparando trechos de código com e sem code smells
 
-**Versão interativa:** abra [`docs/interativo/quiz.html`](interativo/quiz.html) no navegador.
+**Versão interativa:** abra [`docs/interativo/quiz.html`](interativo/quiz.html) no navegador. Ao finalizar, o estudante pode **baixar um comprovante em PDF** informando nome, matrícula e curso.
 
 **Comparativo de código:** abra [`docs/interativo/comparativo.html`](interativo/comparativo.html) para ver trechos com e sem smells lado a lado.
 
