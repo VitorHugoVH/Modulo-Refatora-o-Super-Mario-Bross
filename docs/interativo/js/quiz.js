@@ -1,10 +1,13 @@
 let currentQuestion = 0;
 let answers = [];
 let answered = false;
+let selectedOption = null;
 
 function initQuiz() {
   answers = new Array(QUIZ_QUESTIONS.length).fill(null);
   currentQuestion = 0;
+  selectedOption = null;
+  answered = false;
   renderQuestion();
 }
 
@@ -30,7 +33,9 @@ function renderQuestion() {
       </div>
 
       <div id="quiz-feedback"></div>
-      <div class="quiz-actions" id="quiz-actions"></div>
+      <div class="quiz-actions" id="quiz-actions">
+        <button class="btn btn-primary" id="validate-btn" type="button" disabled>Validar resposta</button>
+      </div>
     </div>
   `;
 
@@ -39,6 +44,8 @@ function renderQuestion() {
 
   if (answered) {
     showFeedback(q, answers[currentQuestion]);
+  } else {
+    bindValidateHandler(q);
   }
 }
 
@@ -73,10 +80,30 @@ function bindOptionHandlers(q) {
       if (answered) return;
 
       const index = parseInt(btn.dataset.index, 10);
-      answers[currentQuestion] = index;
-      answered = true;
-      showFeedback(q, index);
+      selectedOption = index;
+
+      document.querySelectorAll(".quiz-option").forEach((option, i) => {
+        option.classList.toggle("selected", i === index);
+      });
+
+      const validateBtn = document.getElementById("validate-btn");
+      if (validateBtn) {
+        validateBtn.disabled = false;
+      }
     });
+  });
+}
+
+function bindValidateHandler(q) {
+  const validateBtn = document.getElementById("validate-btn");
+  if (!validateBtn) return;
+
+  validateBtn.addEventListener("click", () => {
+    if (answered || selectedOption === null) return;
+
+    answers[currentQuestion] = selectedOption;
+    answered = true;
+    showFeedback(q, selectedOption);
   });
 }
 
@@ -101,13 +128,14 @@ function showFeedback(q, selectedIndex) {
 
   actions.innerHTML = isLast
     ? `<button class="btn btn-success" id="finish-btn">Ver resultado final</button>`
-    : `<button class="btn btn-primary" id="next-btn">Próxima questão →</button>`;
+    : `<button class="btn btn-primary" id="next-btn">Próxima questão</button>`;
 
   if (isLast) {
     document.getElementById("finish-btn").addEventListener("click", showResults);
   } else {
     document.getElementById("next-btn").addEventListener("click", () => {
       currentQuestion++;
+      selectedOption = null;
       answered = false;
       renderQuestion();
     });

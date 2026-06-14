@@ -503,6 +503,12 @@ nav a.active {
   border-color: var(--mario-blue);
 }
 
+.quiz-option.selected:not(:disabled) {
+  border-color: var(--mario-blue);
+  background: rgba(4, 156, 216, 0.12);
+  box-shadow: 0 0 0 1px var(--mario-blue);
+}
+
 .quiz-option:disabled {
   cursor: default;
 }
