@@ -10,8 +10,8 @@ function buildCoverHtml() {
       <div class="guia-cover-badge">Módulo Caso Prático</div>
       <h1>Refatoração no Super Mario Bros</h1>
       <p>
-        Guia para estudantes: cenário do jogo, code smells,
-        passo a passo de refatoração e orientações do quiz.
+        Guia completo para estudantes: cenário do jogo, code smells,
+        passo a passo de refatoração, comparativos e quiz.
       </p>
       <p style="margin-top:1rem;font-size:0.85rem">
         Curso de Refatoração de Código
@@ -20,9 +20,20 @@ function buildCoverHtml() {
   `;
 }
 
-function buildGuideHtml() {
-  if (typeof marked === "undefined" || typeof GUIDE_MARKDOWN === "undefined") {
-    return null;
+function renderGuide() {
+  const statusEl = document.getElementById("guia-status");
+  const docEl = document.getElementById("guia-document");
+  const downloadBtn = document.getElementById("download-pdf-btn");
+  const printBtn = document.getElementById("print-btn");
+
+  if (typeof marked === "undefined") {
+    statusEl.textContent = "Erro: biblioteca de Markdown não carregada. Verifique sua conexão.";
+    return;
+  }
+
+  if (typeof GUIDE_MARKDOWN === "undefined") {
+    statusEl.textContent = "Erro: conteúdo do guia não encontrado.";
+    return;
   }
 
   marked.setOptions({
@@ -31,25 +42,16 @@ function buildGuideHtml() {
     headerIds: true
   });
 
-  return buildCoverHtml() + marked.parse(preprocessMarkdown(GUIDE_MARKDOWN));
-}
-
-function renderGuide() {
-  const statusEl = document.getElementById("guia-status");
-  const docEl = document.getElementById("guia-document");
-  const downloadBtn = document.getElementById("download-pdf-btn");
-
-  const html = buildGuideHtml();
-
-  if (!html) {
-    statusEl.textContent = "Erro ao carregar o guia. Verifique sua conexão e recarregue a página.";
-    return;
-  }
-
+  const html = buildCoverHtml() + marked.parse(preprocessMarkdown(GUIDE_MARKDOWN));
   docEl.innerHTML = html;
+  docEl.classList.remove("hidden");
   statusEl.classList.add("hidden");
+
   downloadBtn.disabled = false;
+  printBtn.disabled = false;
+
   downloadBtn.addEventListener("click", downloadGuidePdf);
+  printBtn.addEventListener("click", () => window.print());
 }
 
 function downloadGuidePdf() {
@@ -57,7 +59,7 @@ function downloadGuidePdf() {
   const btn = document.getElementById("download-pdf-btn");
 
   if (typeof html2pdf === "undefined") {
-    alert("Biblioteca PDF não carregada. Verifique sua conexão e recarregue a página.");
+    alert("Biblioteca PDF não carregada. Use Imprimir > Salvar como PDF ou verifique sua conexão.");
     return;
   }
 
@@ -92,15 +94,15 @@ function downloadGuidePdf() {
     .from(docEl)
     .save()
     .then(() => {
-      btn.textContent = "Baixar PDF";
+      btn.textContent = "⬇ Baixar PDF";
       btn.disabled = false;
       document.body.classList.remove("pdf-export-mode");
     })
     .catch(() => {
-      btn.textContent = "Baixar PDF";
+      btn.textContent = "⬇ Baixar PDF";
       btn.disabled = false;
       document.body.classList.remove("pdf-export-mode");
-      alert("Não foi possível gerar o PDF. Tente novamente.");
+      alert("Não foi possível gerar o PDF. Tente usar Imprimir > Salvar como PDF.");
     });
 }
 

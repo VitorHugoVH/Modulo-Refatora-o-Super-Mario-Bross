@@ -14,7 +14,7 @@
         <div class="logo-icon">SMB</div>
         <div>
           <h1>Guia do Caso Prático</h1>
-          <p>Download do material em PDF</p>
+          <p>Material completo para estudantes</p>
         </div>
       </div>
       <nav>
@@ -26,35 +26,25 @@
     </div>
   </header>
 
-  <main class="container">
-    <section class="guia-download-page">
-      <div class="guia-download-card">
-        <h2>Guia do Caso Prático</h2>
-        <p>
-          Material em PDF com o passo a passo do módulo: cenário do jogo,
-          análise de code smells, técnicas de refatoração e orientações para o quiz.
-        </p>
-        <ul class="guia-download-list">
-          <li>Introdução e configuração do projeto</li>
-          <li>10 code smells identificados no Super Mario Bros</li>
-          <li>7 passos de refatoração com exemplos</li>
-          <li>Comparativos antes vs. depois</li>
-          <li>Orientações do quiz (sem gabarito)</li>
-        </ul>
-        <p class="guia-download-note">
-          O conteúdo completo está disponível apenas para <strong>download em PDF</strong>.
-          As respostas do quiz devem ser obtidas no módulo interativo após validar cada questão.
-        </p>
-        <div id="guia-status" class="guia-loading">Preparando guia...</div>
-        <button class="btn btn-success" id="download-pdf-btn" disabled>Baixar PDF</button>
+  <div class="guia-toolbar">
+    <div class="container">
+      <span style="color:var(--muted);font-size:0.9rem">
+        Passo a passo completo: smells, refatoração e quiz
+      </span>
+      <div class="guia-toolbar-actions">
+        <button class="btn btn-success" id="download-pdf-btn" disabled>⬇ Baixar PDF</button>
+        <button class="btn btn-secondary" id="print-btn" disabled>🖨 Imprimir</button>
       </div>
-    </section>
+    </div>
+  </div>
 
-    <article id="guia-document" class="guia-document guia-document-hidden" aria-hidden="true"></article>
+  <main class="container">
+    <div id="guia-status" class="guia-loading">Carregando guia...</div>
+    <article id="guia-document" class="guia-document hidden"></article>
   </main>
 
   <footer>
-    Módulo Caso Prático — Curso de Refatoração de Código
+    Conteúdo baseado em <code>docs/CASO-PRATICO-REFATORACAO.md</code>
   </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
