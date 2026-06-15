@@ -27,11 +27,13 @@ Abra no navegador a pasta **`docs/interativo/`**:
 | Início | [`index.html`](interativo/index.html) | Hub com links para quiz e comparativo |
 | Comparativo | [`comparativo.html`](interativo/comparativo.html) | Código com smell vs. refatorado (lado a lado) |
 | Quiz | [`quiz.html`](interativo/quiz.html) | 10 questões com feedback imediato |
-| Guia PDF | [`guia.html`](interativo/guia.html) | Guia completo exportável em PDF |
+| Guia PDF | [`guia.html`](interativo/guia.html) | Guia exportável em PDF (sem gabarito) |
 
 > **Como abrir:** clique duas vezes em `docs/interativo/index.html` ou use *Live Server* / servidor local na pasta `docs/interativo/`.
 >
-> **Guia em PDF:** abra `docs/interativo/guia.html` e clique em **Baixar PDF** (requer internet na primeira carga das bibliotecas).
+> **Guia em PDF:** abra `docs/interativo/guia.html` e clique em **Baixar PDF**. O conteúdo não é exibido na tela; as respostas do quiz ficam apenas no módulo interativo.
+>
+> **Material do instrutor:** o arquivo `CASO-PRATICO-REFATORACAO.md` (com gabarito) é de uso interno do grupo — não está linkado na interface do estudante.
 
 ---
 

@@ -1,4 +1,57 @@
-/* Guia do Caso Prático — leitura na tela e exportação PDF */
+/* Guia do Caso Prático — exportação PDF */
+
+.guia-download-page {
+  max-width: 640px;
+  margin: 2rem auto 3rem;
+}
+
+.guia-download-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  text-align: center;
+}
+
+.guia-download-card h2 {
+  margin-bottom: 0.75rem;
+  font-size: 1.5rem;
+}
+
+.guia-download-card > p {
+  color: var(--muted);
+  margin-bottom: 1.25rem;
+}
+
+.guia-download-list {
+  text-align: left;
+  margin: 0 auto 1.25rem;
+  padding-left: 1.25rem;
+  color: var(--text);
+  max-width: 420px;
+}
+
+.guia-download-list li {
+  margin-bottom: 0.4rem;
+}
+
+.guia-download-note {
+  font-size: 0.9rem;
+  color: var(--muted);
+  background: var(--surface-2);
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.guia-document-hidden {
+  position: fixed;
+  left: -10000px;
+  top: 0;
+  width: 900px;
+  visibility: hidden;
+  pointer-events: none;
+}
 
 .guia-toolbar {
   position: sticky;
